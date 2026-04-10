@@ -1,0 +1,164 @@
+============================================================
+  PROMPT LANJUTAN — IVP FIN 30 · Vite + React Dashboard
+  Gunakan ini sebagai pesan pertama di sesi baru.
+============================================================
+
+Ini adalah lanjutan proyek dashboard keuangan IVP FIN 30.
+Jangan ubah file apapun yang sudah ada — hanya lakukan perubahan yang saya minta.
+
+---
+
+## KONTEKS PROYEK
+
+Aplikasi Vite + React (single-page)
+Tujuan Akuntan upload Excel export Navision → dashboard laporan keuangan otomatis
+Cara kerja sistem baca nomor akun COA dari kolom A, SUMIF ke akun-akun yang sudah dipetakan
+
+Cara jalankan
+  cd finsight
+  npm install
+  npm run dev
+  # build npm run build → dist
+
+---
+
+## STRUKTUR FILE
+
+```
+finsightsrc
+├── main.jsx
+├── App.jsx                          ← entry, state 2 file (LR + Neraca)
+├── index.css                        ← base styles (font Arial 15px, light theme)
+├── lib
+│   ├── parser.js                    ← Excel parser, ACCT map, COA helpers
+│   ├── format.js                    ← fmt(), fmtFull(), pct(), sign(), goodBad()
+│   ├── dashboardCss.js              ← CSS vars + semua class dashboard
+│   └── CoaContext.js                ← createContext(null), export CoaContext
+└── components
+    ├── Dashboard.jsx                ← layout utama, KPI grid, tab bar
+    ├── UploadScreen.jsx             ← 2 slot upload (LR wajib, Neraca opsional)
+    ├── ui
+    │   ├── index.jsx                ← Card, Grid, Empty, Badge, DataTable, ChartTip, SectionLabel
+    │   ├── CoaDrilldown.jsx
+    │   ├── KpiDrilldown.jsx
+    │   ├── PeriodPicker.jsx
+    │   ├── RatioPanel.jsx           ← export default + export { Section, WaterfallChart }
+    │   └── VarianceSection.jsx
+    └── tabs
+        ├── TabLabRugi.jsx
+        ├── TabNeraca.jsx
+        ├── TabArusKas.jsx
+        ├── TabPiutang.jsx
+        └── TabVariance.jsx
+```
+
+---
+
+## ARSITEKTUR PENTING
+
+### App.jsx — 2 file upload terpisah
+- File LR (wajib) net change per bulan → parseSheet()
+- File Neraca (opsional) balance at date → parseBalanceSheet()
+- `handleFiles(lrPayload, nrcPayload)` → set data → Dashboard
+
+### Dashboard.jsx — data flow
+- `filteredLr`      → TabLabRugi, TabArusKas (lrData=), RatioPanel, KpiDrilldown, VarianceSection
+- `filteredNeraca`  → TabNeraca, TabPiutang, TabArusKas (neracaData=), RatioPanel
+- `hasNeraca`       → disable tab Neraca jika file neraca tidak diupload
+- CoaContext.Provider membungkus semua → value { openCoa, lrData filteredLr }
+
+### Tab data props
+  TabLabRugi   data={filteredLr}    months={activeMonths}
+  TabNeraca    data={filteredNeraca} months={activeMonths}
+  TabArusKas   lrData={filteredLr}  neracaData={filteredNeraca} months={activeMonths}
+  TabPiutang   data={filteredNeraca} months={activeMonths}
+  VarianceSection filteredLr={filteredLr} ... (lihat Dashboard.jsx)
+
+### CoaContext — WAJIB import dari lib, bukan dari Dashboard
+  import { CoaContext } from '....libCoaContext'   ← ui dan tabs
+  import { CoaContext } from '..libCoaContext'       ← Dashboard.jsx
+
+---
+
+## TEMA & STYLE
+
+Theme LIGHT WARM
+Font Arial, sans-serif — gunakan fontFamily 'Arial, sans-serif' (tanpa ekstra quote)
+Base html { font-size 15px }
+
+CSS Variables (dari dashboardCss.js root)
+  --bg#F0EDE8  --surface#F7F5F1  --panel#FDFCFA  --card#FFFFFF
+  --ink#1A1916  --t1#1A1916  --t2#36332D  --t3#6B6760  --t4#A09C94
+  --rule#E0DDD7  --rule2#EAE8E3  --raised#F0EDE8
+  --pos#1A7A40  --pos-dim#D6F0E2
+  --neg#CC2200  --neg-dim#FDECEA
+  --warn#A05C00  --warn-dim#FEF3E2
+  --blue#1B5FCC  --blue-dim#E0EAFE
+  --purple#6B3FBF  --lime#5C8C00
+
+Format angka SELALU pakai fmtFull() — angka penuh, bukan singkatan
+
+---
+
+## COA ACCOUNT MAP (parser.js — ACCT)
+
+Sign convention Navision pendapatan = kredit (negatif), biaya = debit (positif)
+
+  PENDAPATAN   '41999999'    HPP          '42999999'
+  BIAYA_MKT    '51999999'    BIAYA_KARY   '52999999'
+  BIAYA_GEDUNG '53999999'    BIAYA_UMUM   '54999999'
+  BIAYA_OPS_LN '55999999'    BIAYA_OPS    '59999999'
+  SELISIH_KURS '61999999'    ADM_BANK     '64999999'
+  PEND_LAIN    '65199999'    BIAYA_LAIN   '65299999'
+  PAJAK        '80999999'    LABA_BERSIH  '89999999'
+  AKTIVA_LANCAR'11999999'    AKTIVA_TETAP '12999999'
+  AKTIVA_LAIN  '13999999'    TOTAL_AKTIVA '19999999'
+  HUT_LANCAR   '21999999'    HUT_PJP      '22999999'
+  EKUITAS      '39999999'
+  KAS          '11019999'    BANK         '11029999'
+  PIU_USAHA    '11049999'    PERSEDIAAN   '11089999'
+
+Helper functions
+  totalOf(rows, no)   → sum semua periode
+  lastOf(rows, no)    → nilai periode terakhir
+  monthlyOf(rows, no) → array nilai per bulan
+
+---
+
+## TAB-SPESIFIK
+
+### TabNeraca
+- Filter akun prefix 1x2x3x, bukan akun LR (4x-9x)
+- Buang SUMMARY_NOS (xxxxxs999999), nama mengandung TOTALi
+- Dropdown per grup Aktiva Lancar, Aktiva Tetap, Aktiva Lain, Hutang Lancar, Hutang JK Panjang, Ekuitas
+- Tiap grup expand → mini tren chart + tabel sub-akun
+- Grafik 2 pie (aktiva & pasiva), line tren aktiva vs pasiva, stacked bar aktiva, multi-line komponen
+
+### TabArusKas
+- Baca dari neracaData (bukan lrData)
+- Akun Kas  prefix 1101x — HANYA by nomor akun (NO fallback by nama)
+- Akun Bank prefix 1102x — HANYA by nomor akun (NO fallback by nama)
+- Arus kas = delta saldo (saldo[i] - saldo[i-1])
+- Tabel saldo dropdown — header KasBank klik untuk expand detail akun
+
+### TabPiutang
+- Baca dari neracaData
+- Filter nama akun mengandung piutangi (bukan by prefix)
+- Buang TOTAL rows, no. akun ending 99999999999
+
+### TabLabRugi
+- zigzag S-flow design
+- sign helper getProfitColor(v), getExpenseColor(v)
+
+---
+
+## DEPENDENCIES
+
+  react ^18.3.1, react-dom ^18.3.1
+  recharts ^2.12.7, xlsx ^0.18.5
+  framer-motion ^11.3.19, lucide-react ^0.400.0
+  @vitejsplugin-react ^4.3.1, vite ^5.4.2
+
+---
+
+Sekarang tunggu instruksi saya selanjutnya.

@@ -1,0 +1,199 @@
+.root {
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10,10,8,.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 56px;
+}
+
+.headerLeft { display: flex; align-items: center; gap: 20px; }
+
+.logo { display: flex; align-items: baseline; }
+.logoMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font-ui);
+  font-weight: 800;
+  font-size: 14px;
+  border-radius: 6px;
+  margin-right: 7px;
+}
+.logoText {
+  font-family: var(--font-ui);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.5px;
+}
+.logoText em { font-style: normal; color: var(--accent); }
+
+.periodBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text3);
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+.periodDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent2);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.btnReset {
+  background: transparent;
+  color: var(--text3);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btnReset:hover { color: var(--text); border-color: var(--border2); }
+
+/* KPI Strip */
+.kpiStrip {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.kpiCard {
+  background: var(--surface);
+  padding: 18px 22px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.15s;
+}
+.kpiCard::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent-color, var(--border2));
+  opacity: 0.6;
+}
+.kpiCard:hover { background: var(--surface2); }
+
+.kpiLabel {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  margin-bottom: 6px;
+}
+
+.kpiValue {
+  font-family: var(--font-display);
+  font-size: 26px;
+  color: var(--text);
+  letter-spacing: -0.5px;
+  line-height: 1;
+  margin-bottom: 5px;
+}
+
+.kpiSub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text3);
+}
+.kpiSubGood { color: var(--accent2) !important; }
+.kpiSubBad  { color: var(--accent)  !important; }
+
+/* Tab Bar */
+.tabBar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  padding: 0 32px;
+}
+
+.tabBtn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text3);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: -1px;
+  white-space: nowrap;
+}
+.tabBtn:hover { color: var(--text2); }
+.tabBtnActive {
+  color: var(--text) !important;
+  border-bottom-color: var(--accent) !important;
+}
+
+.tabIcon {
+  font-size: 14px;
+  font-family: var(--font-mono);
+  color: var(--accent);
+  opacity: 0.7;
+}
+.tabBtnActive .tabIcon { opacity: 1; }
+
+/* Content */
+.tabContent {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  padding: 28px 32px 64px;
+  overflow-x: auto;
+}

@@ -1,451 +1,199 @@
-<!-- index.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard</title>
-  <link rel="stylesheet" href="dashboard.css" />
-</head>
-<body>
+.root {
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
 
-<div class="root">
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+}
 
-  <!-- HEADER -->
-  <header class="header">
-    <div class="header-left">
-      <div class="logo">
-        <div class="logo-mark">AN</div>
-        <span class="logo-text">Ana<em>lyze</em></span>
-      </div>
-      <div class="period-badge">
-        <div class="period-dot"></div>
-        <span>Q2 2025 · Live</span>
-      </div>
-    </div>
-    <div class="header-right">
-      <button class="btn-sm">Export</button>
-      <button class="btn-sm">Filters</button>
-      <button class="btn-primary">+ Report</button>
-    </div>
-  </header>
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10,10,8,.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 56px;
+}
 
-  <!-- KPI STRIP -->
-  <div class="kpi-strip">
-    <div class="kpi-card">
-      <div class="kpi-accent-bar" style="background:var(--accent)"></div>
-      <div class="kpi-label">Total Revenue</div>
-      <div class="kpi-value">$4.2M</div>
-      <div class="kpi-sub kpi-sub-good">▲ 18.4% vs last quarter</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-accent-bar" style="background:var(--accent3)"></div>
-      <div class="kpi-label">Active Users</div>
-      <div class="kpi-value">84.3K</div>
-      <div class="kpi-sub kpi-sub-good">▲ 7.2% MoM</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-accent-bar" style="background:var(--accent2)"></div>
-      <div class="kpi-label">Conversion</div>
-      <div class="kpi-value">3.81%</div>
-      <div class="kpi-sub kpi-sub-bad">▼ 0.3pp vs target</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-accent-bar" style="background:#c97df0"></div>
-      <div class="kpi-label">Avg Order Value</div>
-      <div class="kpi-value">$128</div>
-      <div class="kpi-sub kpi-sub-good">▲ 11.0%</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-accent-bar" style="background:var(--accent3)"></div>
-      <div class="kpi-label">Churn Rate</div>
-      <div class="kpi-value">2.1%</div>
-      <div class="kpi-sub kpi-sub-good">▼ Best quarter</div>
-    </div>
-  </div>
+.headerLeft { display: flex; align-items: center; gap: 20px; }
 
-  <!-- TAB BAR -->
-  <nav class="tab-bar">
-    <button class="tab-btn tab-btn-active"><span class="tab-icon">01</span> Overview</button>
-    <button class="tab-btn"><span class="tab-icon">02</span> Revenue</button>
-    <button class="tab-btn"><span class="tab-icon">03</span> Acquisition</button>
-    <button class="tab-btn"><span class="tab-icon">04</span> Retention</button>
-    <button class="tab-btn"><span class="tab-icon">05</span> Segments</button>
-  </nav>
+.logo { display: flex; align-items: baseline; }
+.logoMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font-ui);
+  font-weight: 800;
+  font-size: 14px;
+  border-radius: 6px;
+  margin-right: 7px;
+}
+.logoText {
+  font-family: var(--font-ui);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.5px;
+}
+.logoText em { font-style: normal; color: var(--accent); }
 
-  <!-- MAIN CONTENT -->
-  <main class="tab-content">
+.periodBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text3);
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+.periodDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent2);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
 
-    <div class="section-header">
-      <span class="section-title">Performance Overview</span>
-      <span class="section-title" style="color:var(--text3)">Apr – Jun 2025</span>
-    </div>
+.btnReset {
+  background: transparent;
+  color: var(--text3);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btnReset:hover { color: var(--text); border-color: var(--border2); }
 
-    <!-- Large chart row -->
-    <div class="chart-grid">
+/* KPI Strip */
+.kpiStrip {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border-bottom: 1px solid var(--border);
+}
 
-      <!-- Revenue vs Target -->
-      <div class="chart-card">
-        <div class="chart-title">Revenue vs Target</div>
-        <div class="chart-sub">Monthly actuals with projection band · USD thousands</div>
-        <div class="chart-legend">
-          <span class="legend-item">
-            <span class="legend-dot" style="background:#e85d2f"></span>Actual
-          </span>
-          <span class="legend-item">
-            <span class="legend-dot" style="background:#5b9cf6;opacity:.5"></span>Target
-          </span>
-          <span class="legend-item">
-            <span class="legend-dot" style="background:#3dd68c;opacity:.5"></span>Forecast
-          </span>
-        </div>
-        <div class="chart-wrap" style="height:220px">
-          <canvas id="chartRevenue"
-            role="img"
-            aria-label="Grouped bar chart of monthly revenue vs target Jan–Jun 2025">
-            Monthly revenue: Jan 310K, Feb 390K, Mar 420K, Apr 480K, May 560K, Jun 610K.
-          </canvas>
-        </div>
-      </div>
+.kpiCard {
+  background: var(--surface);
+  padding: 18px 22px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.15s;
+}
+.kpiCard::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent-color, var(--border2));
+  opacity: 0.6;
+}
+.kpiCard:hover { background: var(--surface2); }
 
-      <!-- Revenue Mix donut -->
-      <div class="chart-card">
-        <div class="chart-title">Revenue Mix</div>
-        <div class="chart-sub">By product line · Q2 2025</div>
-        <div class="chart-legend">
-          <span class="legend-item">
-            <span class="legend-dot" style="background:#e85d2f"></span>SaaS 48%
-          </span>
-          <span class="legend-item">
-            <span class="legend-dot" style="background:#5b9cf6"></span>Services 31%
-          </span>
-          <span class="legend-item">
-            <span class="legend-dot" style="background:#3dd68c"></span>Hardware 21%
-          </span>
-        </div>
-        <div class="chart-wrap" style="height:220px">
-          <canvas id="chartMix"
-            role="img"
-            aria-label="Donut chart: SaaS 48%, Services 31%, Hardware 21%">
-            SaaS 48%, Services 31%, Hardware 21%.
-          </canvas>
-        </div>
-      </div>
-    </div>
+.kpiLabel {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  margin-bottom: 6px;
+}
 
-    <!-- Small chart row -->
-    <div class="grid-3">
+.kpiValue {
+  font-family: var(--font-display);
+  font-size: 26px;
+  color: var(--text);
+  letter-spacing: -0.5px;
+  line-height: 1;
+  margin-bottom: 5px;
+}
 
-      <div class="chart-card">
-        <div class="chart-title" style="font-size:12px">DAU / WAU</div>
-        <div class="chart-sub">6-week trend</div>
-        <div class="chart-wrap" style="height:110px">
-          <canvas id="chartDau"
-            role="img"
-            aria-label="Line chart of DAU and WAU over 6 weeks">
-            DAU and WAU trending upward over 6 weeks.
-          </canvas>
-        </div>
-      </div>
+.kpiSub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text3);
+}
+.kpiSubGood { color: var(--accent2) !important; }
+.kpiSubBad  { color: var(--accent)  !important; }
 
-      <div class="chart-card">
-        <div class="chart-title" style="font-size:12px">Sessions by Device</div>
-        <div class="chart-sub">Last 30 days</div>
-        <div class="chart-wrap" style="height:110px">
-          <canvas id="chartDevice"
-            role="img"
-            aria-label="Stacked bar chart of sessions by device type">
-            Mobile, desktop, and tablet sessions over 4 weeks.
-          </canvas>
-        </div>
-      </div>
+/* Tab Bar */
+.tabBar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  padding: 0 32px;
+}
 
-      <div class="chart-card">
-        <div class="chart-title" style="font-size:12px">Funnel Drop-off</div>
-        <div class="chart-sub">Visit → Purchase</div>
-        <div class="chart-wrap" style="height:110px">
-          <canvas id="chartFunnel"
-            role="img"
-            aria-label="Horizontal bar funnel from visit to purchase">
-            Visit 100%, Sign-up 42%, Cart 28%, Purchase 12%.
-          </canvas>
-        </div>
-      </div>
-    </div>
+.tabBtn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text3);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: -1px;
+  white-space: nowrap;
+}
+.tabBtn:hover { color: var(--text2); }
+.tabBtnActive {
+  color: var(--text) !important;
+  border-bottom-color: var(--accent) !important;
+}
 
-    <!-- Table -->
-    <div class="table-card">
-      <table class="table-inner">
-        <thead>
-          <tr>
-            <th>Channel</th>
-            <th>Sessions</th>
-            <th>Revenue</th>
-            <th>Conv %</th>
-            <th>AOV</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="name-cell">Organic Search</td>
-            <td>142,300</td><td>$1.84M</td><td>4.1%</td><td>$142</td>
-            <td><span class="badge badge-good">Healthy</span></td>
-          </tr>
-          <tr>
-            <td class="name-cell">Paid Social</td>
-            <td>89,100</td><td>$890K</td><td>3.2%</td><td>$118</td>
-            <td><span class="badge badge-mid">On track</span></td>
-          </tr>
-          <tr>
-            <td class="name-cell">Email CRM</td>
-            <td>54,700</td><td>$780K</td><td>6.8%</td><td>$162</td>
-            <td><span class="badge badge-good">Healthy</span></td>
-          </tr>
-          <tr>
-            <td class="name-cell">Direct</td>
-            <td>41,200</td><td>$520K</td><td>3.9%</td><td>$131</td>
-            <td><span class="badge badge-mid">On track</span></td>
-          </tr>
-          <tr>
-            <td class="name-cell">Affiliates</td>
-            <td>22,600</td><td>$170K</td><td>1.9%</td><td>$87</td>
-            <td><span class="badge badge-bad">Review</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+.tabIcon {
+  font-size: 14px;
+  font-family: var(--font-mono);
+  color: var(--accent);
+  opacity: 0.7;
+}
+.tabBtnActive .tabIcon { opacity: 1; }
 
-  </main>
-</div>
-
-<!-- Chart.js — UMD build -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<script>
-  /* ── Global defaults ── */
-  Chart.defaults.color          = '#5a5854';
-  Chart.defaults.borderColor    = 'rgba(255,255,255,0.06)';
-  Chart.defaults.font.family    = "'Inter', system-ui, sans-serif";
-  Chart.defaults.font.size      = 10;
-
-  /* Disable all animations */
-  Chart.defaults.animation      = false;
-  Chart.defaults.animations     = {};
-  Chart.defaults.transitions    = {};
-
-  /* ── Shared tooltip style ── */
-  const tooltipDefaults = {
-    backgroundColor : '#1a1a18',
-    titleColor      : '#f0ede8',
-    bodyColor       : '#a8a49e',
-    borderColor     : 'rgba(255,255,255,0.1)',
-    borderWidth     : 1,
-    padding         : 10,
-    cornerRadius    : 6,
-  };
-
-  /* ── 1. Revenue vs Target (grouped bar + line) ── */
-  new Chart(document.getElementById('chartRevenue'), {
-    data: {
-      labels: ['Jan','Feb','Mar','Apr','May','Jun'],
-      datasets: [
-        {
-          type            : 'bar',
-          label           : 'Actual',
-          data            : [310, 390, 420, 480, 560, 610],
-          backgroundColor : 'rgba(232,93,47,0.85)',
-          borderRadius    : 3,
-          borderSkipped   : false,
-        },
-        {
-          type            : 'bar',
-          label           : 'Target',
-          data            : [350, 380, 430, 460, 520, 580],
-          backgroundColor : 'rgba(91,156,246,0.20)',
-          borderColor     : 'rgba(91,156,246,0.45)',
-          borderWidth     : 1,
-          borderRadius    : 3,
-          borderSkipped   : false,
-        },
-        {
-          type            : 'line',
-          label           : 'Forecast',
-          data            : [null, null, null, null, 580, 650],
-          borderColor     : '#3dd68c',
-          borderDash      : [4, 3],
-          borderWidth     : 1.5,
-          pointRadius     : 3,
-          pointBackgroundColor : '#3dd68c',
-          fill            : false,
-          tension         : 0.3,
-        },
-      ],
-    },
-    options: {
-      responsive            : true,
-      maintainAspectRatio   : false,
-      plugins: {
-        legend  : { display: false },
-        tooltip : tooltipDefaults,
-      },
-      scales: {
-        x: { grid: { color: 'rgba(255,255,255,0.04)' } },
-        y: {
-          grid     : { color: 'rgba(255,255,255,0.04)' },
-          ticks    : { callback: v => '$' + v + 'K' },
-          beginAtZero: true,
-        },
-      },
-    },
-  });
-
-  /* ── 2. Revenue Mix (doughnut) ── */
-  new Chart(document.getElementById('chartMix'), {
-    type: 'doughnut',
-    data: {
-      labels: ['SaaS', 'Services', 'Hardware'],
-      datasets: [{
-        data            : [48, 31, 21],
-        backgroundColor : ['#e85d2f', '#5b9cf6', '#3dd68c'],
-        borderWidth     : 0,
-        hoverOffset     : 4,
-      }],
-    },
-    options: {
-      responsive          : true,
-      maintainAspectRatio : false,
-      cutout              : '72%',
-      plugins: {
-        legend  : { display: false },
-        tooltip : {
-          ...tooltipDefaults,
-          callbacks: { label: ctx => ' ' + ctx.label + ' — ' + ctx.parsed + '%' },
-        },
-      },
-    },
-  });
-
-  /* ── 3. DAU / WAU (line) ── */
-  const weeks = ['W1','W2','W3','W4','W5','W6'];
-  new Chart(document.getElementById('chartDau'), {
-    type: 'line',
-    data: {
-      labels: weeks,
-      datasets: [
-        {
-          label       : 'DAU',
-          data        : [12.4, 13.1, 14.8, 15.2, 16.0, 17.3],
-          borderColor : '#e85d2f',
-          borderWidth : 1.5,
-          pointRadius : 2,
-          fill        : false,
-          tension     : 0.4,
-        },
-        {
-          label       : 'WAU',
-          data        : [38, 41, 45, 48, 53, 57],
-          borderColor : '#5b9cf6',
-          borderWidth : 1.5,
-          pointRadius : 2,
-          fill        : false,
-          tension     : 0.4,
-        },
-      ],
-    },
-    options: {
-      responsive          : true,
-      maintainAspectRatio : false,
-      plugins: { legend: { display: false }, tooltip: tooltipDefaults },
-      scales: {
-        x: { grid: { display: false } },
-        y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { maxTicksLimit: 4 } },
-      },
-    },
-  });
-
-  /* ── 4. Sessions by Device (stacked bar) ── */
-  new Chart(document.getElementById('chartDevice'), {
-    type: 'bar',
-    data: {
-      labels: ['W1','W2','W3','W4'],
-      datasets: [
-        {
-          label           : 'Mobile',
-          data            : [54, 58, 61, 63],
-          backgroundColor : '#e85d2f',
-          borderRadius    : 2,
-          stack           : 'device',
-        },
-        {
-          label           : 'Desktop',
-          data            : [32, 30, 28, 27],
-          backgroundColor : '#5b9cf6',
-          borderRadius    : 2,
-          stack           : 'device',
-        },
-        {
-          label           : 'Tablet',
-          data            : [14, 12, 11, 10],
-          backgroundColor : '#3dd68c',
-          borderRadius    : 2,
-          stack           : 'device',
-        },
-      ],
-    },
-    options: {
-      responsive          : true,
-      maintainAspectRatio : false,
-      plugins: { legend: { display: false }, tooltip: tooltipDefaults },
-      scales: {
-        x: { grid: { display: false }, stacked: true },
-        y: { grid: { color: 'rgba(255,255,255,0.04)' }, stacked: true, ticks: { maxTicksLimit: 4 } },
-      },
-    },
-  });
-
-  /* ── 5. Funnel (horizontal bar) ── */
-  new Chart(document.getElementById('chartFunnel'), {
-    type: 'bar',
-    data: {
-      labels: ['Visit','Sign-up','Cart','Purchase'],
-      datasets: [{
-        label           : 'Users',
-        data            : [100, 42, 28, 12],
-        backgroundColor : ['#5b9cf6','#5b9cf6','#e85d2f','#3dd68c'],
-        borderRadius    : 3,
-        borderSkipped   : false,
-      }],
-    },
-    options: {
-      indexAxis           : 'y',
-      responsive          : true,
-      maintainAspectRatio : false,
-      plugins: {
-        legend  : { display: false },
-        tooltip : {
-          ...tooltipDefaults,
-          callbacks: { label: ctx => ' ' + ctx.parsed.x + '%' },
-        },
-      },
-      scales: {
-        x: {
-          grid  : { color: 'rgba(255,255,255,0.04)' },
-          ticks : { callback: v => v + '%' },
-          max   : 100,
-        },
-        y: { grid: { display: false } },
-      },
-    },
-  });
-
-  /* ── Tab switching ── */
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-btn-active'));
-      btn.classList.add('tab-btn-active');
-    });
-  });
-</script>
-
-</body>
-</html>
+/* Content */
+.tabContent {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  padding: 28px 32px 64px;
+  overflow-x: auto;
+}

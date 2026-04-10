@@ -1,167 +1,260 @@
+/* ============================================
+   REDESIGN — Dashboard UI/UX
+   Cleaner, more modern, better hierarchy
+   ============================================ */
+
+:root {
+  --bg: #0a0a08;
+  --surface: #111110;
+  --surface2: #181816;
+  --surface3: #1f1f1c;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.14);
+  --text: #f0ede8;
+  --text2: #a8a49c;
+  --text3: #6b6760;
+  --accent: #e85d3a;
+  --accent2: #3ab88a;
+  --accent3: #7b6ef6;
+  --font-ui: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+  --font-display: "Inter", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Root ── */
 .root {
   min-height: 100vh;
   background: var(--bg);
   display: flex;
   flex-direction: column;
-  position: relative;
+  font-family: var(--font-ui);
 }
 
+/* ── Grain overlay ── */
 .grain {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  background-size: 256px 256px;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
 }
 
+/* ── Header ── */
 .header {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(10,10,8,.92);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 32px;
-  height: 56px;
+  padding: 0 24px;
+  background: rgba(10,10,8,0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
 }
 
-.headerLeft { display: flex; align-items: center; gap: 20px; }
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
 
-.logo { display: flex; align-items: baseline; }
+/* ── Logo ── */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
 .logoMark {
-  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  background: var(--accent);
+  border-radius: 6px;
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
-  background: var(--accent);
-  color: #fff;
-  font-family: var(--font-ui);
-  font-weight: 800;
-  font-size: 14px;
-  border-radius: 6px;
-  margin-right: 7px;
-}
-.logoText {
-  font-family: var(--font-ui);
-  font-size: 18px;
   font-weight: 700;
-  color: var(--text);
-  letter-spacing: -0.5px;
+  font-size: 12px;
+  color: #fff;
+  letter-spacing: -0.3px;
+  flex-shrink: 0;
 }
-.logoText em { font-style: normal; color: var(--accent); }
 
+.logoText {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.4px;
+  line-height: 1;
+}
+
+.logoText em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+/* ── Period badge ── */
 .periodBadge {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--text3);
-  border: 1px solid var(--border);
-  padding: 4px 10px;
+  gap: 5px;
+  padding: 3px 10px;
+  border: 1px solid var(--border2);
   border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 0.02em;
 }
+
 .periodDot {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: var(--accent2);
-  animation: pulse 2s ease-in-out infinite;
-}
-@keyframes pulse {
-  0%,100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  flex-shrink: 0;
+  animation: blink 2.4s ease-in-out infinite;
 }
 
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+/* ── Reset button ── */
 .btnReset {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   background: transparent;
+  border: 1px solid var(--border2);
   color: var(--text3);
-  border: 1px solid var(--border);
-  padding: 6px 14px;
   font-family: var(--font-ui);
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 12px;
   border-radius: 100px;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: color 0.12s, border-color 0.12s, background 0.12s;
+  white-space: nowrap;
 }
-.btnReset:hover { color: var(--text); border-color: var(--border2); }
 
-/* KPI Strip */
+.btnReset:hover {
+  color: var(--text2);
+  border-color: var(--border2);
+  background: rgba(255,255,255,0.04);
+}
+
+.btnReset:active {
+  background: rgba(255,255,255,0.07);
+  transform: scale(0.97);
+}
+
+/* ── KPI strip ── */
 .kpiStrip {
   position: relative;
   z-index: 1;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 1px;
-  background: var(--border);
   border-bottom: 1px solid var(--border);
 }
 
 .kpiCard {
-  background: var(--surface);
-  padding: 18px 22px;
   position: relative;
+  padding: 20px 20px 16px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  transition: background 0.12s;
+  cursor: default;
   overflow: hidden;
-  transition: background 0.15s;
 }
-.kpiCard::after {
+
+.kpiCard:last-child {
+  border-right: none;
+}
+
+.kpiCard::before {
   content: '';
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   right: 0;
-  height: 2px;
-  background: var(--accent-color, var(--border2));
-  opacity: 0.6;
+  height: 1px;
+  background: var(--accent-color, transparent);
+  opacity: 0.8;
+  transition: opacity 0.12s;
 }
-.kpiCard:hover { background: var(--surface2); }
+
+.kpiCard:hover {
+  background: var(--surface2);
+}
+
+.kpiCard:hover::before {
+  opacity: 1;
+}
 
 .kpiLabel {
   font-family: var(--font-mono);
   font-size: 9px;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   color: var(--text3);
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 }
 
 .kpiValue {
-  font-family: var(--font-display);
-  font-size: 26px;
+  font-size: 28px;
+  font-weight: 600;
   color: var(--text);
-  letter-spacing: -0.5px;
+  letter-spacing: -1px;
   line-height: 1;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  font-variant-numeric: tabular-nums;
 }
 
 .kpiSub {
   font-family: var(--font-mono);
   font-size: 10px;
   color: var(--text3);
+  letter-spacing: 0.02em;
 }
+
 .kpiSubGood { color: var(--accent2) !important; }
 .kpiSubBad  { color: var(--accent)  !important; }
 
-/* Tab Bar */
+/* ── Tab bar ── */
 .tabBar {
   position: relative;
   z-index: 1;
   display: flex;
-  gap: 0;
+  align-items: stretch;
+  padding: 0 24px;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
-  padding: 0 32px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabBar::-webkit-scrollbar {
+  display: none;
 }
 
 .tabBtn {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   background: transparent;
   border: none;
   border-bottom: 2px solid transparent;
@@ -169,31 +262,75 @@
   font-family: var(--font-ui);
   font-size: 12px;
   font-weight: 500;
-  padding: 14px 18px;
+  padding: 0 16px;
+  height: 44px;
   cursor: pointer;
-  transition: all 0.15s;
-  margin-bottom: -1px;
+  transition: color 0.12s, border-color 0.12s;
   white-space: nowrap;
+  margin-bottom: -1px;
+  letter-spacing: 0.01em;
 }
-.tabBtn:hover { color: var(--text2); }
+
+.tabBtn:hover {
+  color: var(--text2);
+}
+
 .tabBtnActive {
   color: var(--text) !important;
   border-bottom-color: var(--accent) !important;
 }
 
 .tabIcon {
-  font-size: 14px;
+  font-size: 13px;
   font-family: var(--font-mono);
   color: var(--accent);
-  opacity: 0.7;
+  opacity: 0.6;
+  transition: opacity 0.12s;
 }
-.tabBtnActive .tabIcon { opacity: 1; }
 
-/* Content */
+.tabBtnActive .tabIcon {
+  opacity: 1;
+}
+
+/* ── Tab content ── */
 .tabContent {
   position: relative;
   z-index: 1;
   flex: 1;
-  padding: 28px 32px 64px;
+  padding: 24px 24px 60px;
   overflow-x: auto;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .kpiStrip {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .kpiCard:nth-child(3) {
+    border-right: none;
+  }
+
+  .header {
+    padding: 0 16px;
+  }
+
+  .tabContent {
+    padding: 16px 16px 48px;
+  }
+}
+
+@media (max-width: 560px) {
+  .kpiStrip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .kpiCard:nth-child(2),
+  .kpiCard:nth-child(4) {
+    border-right: none;
+  }
+
+  .kpiValue {
+    font-size: 22px;
+  }
 }

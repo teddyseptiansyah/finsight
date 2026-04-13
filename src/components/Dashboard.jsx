@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { ACCT, totalOf, lastOf } from '../lib/parser'
 import { css } from '../lib/dashboardCss'
-import styles from './dashboard.module.css'
+import styles from '../dashboard.module.css'
 import PeriodPicker            from './ui/PeriodPicker'
 import KpiDrilldown            from './ui/KpiDrilldown'
 import RatioPanel, { Section } from './ui/RatioPanel'

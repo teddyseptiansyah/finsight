@@ -20,11 +20,11 @@ const fmt = (val) => {
 }
 
 const TABS = [
-  { id: 'lr',       label: 'Laba Rugi',      needsNeraca: false },
-  { id: 'neraca',   label: 'Neraca',          needsNeraca: true  },
-  { id: 'ak',       label: 'Arus Kas',        needsNeraca: false },
-  { id: 'piutang',  label: 'Piutang',         needsNeraca: false },
-  { id: 'variance', label: 'Variance',        needsNeraca: false },
+  { id: 'lr',       label: 'Laba Rugi',  needsNeraca: false },
+  { id: 'neraca',   label: 'Neraca',     needsNeraca: true  },
+  { id: 'ak',       label: 'Arus Kas',   needsNeraca: false },
+  { id: 'piutang',  label: 'Piutang',    needsNeraca: false },
+  { id: 'variance', label: 'Variance',   needsNeraca: false },
 ]
 
 function filterRows(dataObj, activeMonths, allMonths) {
@@ -47,6 +47,267 @@ function filterRows(dataObj, activeMonths, allMonths) {
   }))
   return { ...dataObj, rows, months: activeMonths, rawRows }
 }
+
+/* ── inline CSS ──────────────────────────────────────────────────────────── */
+const SHELL_CSS = `
+.dash-shell {
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--sans);
+}
+
+/* ── Topbar ── */
+.topbar {
+  height: 52px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  flex-shrink: 0;
+  gap: 12px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: rgba(19,18,16,.92);
+}
+.topbar-left  { display: flex; align-items: center; gap: 10px; }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+
+.topbar-logo {
+  width: 28px; height: 28px;
+  background: linear-gradient(135deg, #e8533a 0%, #c23f28 100%);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 13px; color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(232,83,58,.35);
+  letter-spacing: -.5px;
+}
+.topbar-info { display: flex; flex-direction: column; gap: 0; }
+.topbar-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--t1);
+  letter-spacing: -.4px;
+  line-height: 1.2;
+}
+.topbar-sub {
+  font-size: 9px;
+  color: var(--t4);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  font-family: var(--mono);
+}
+.topbar-sep {
+  width: 1px; height: 18px;
+  background: var(--rule);
+  margin: 0 4px;
+}
+.topbar-period {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px;
+  color: var(--t3);
+  font-family: var(--mono);
+}
+
+/* ── KPI Grid ── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg);
+}
+
+.kpi-cell {
+  padding: 18px 20px 15px;
+  background: var(--surface);
+  border-right: 1px solid var(--rule);
+  cursor: pointer;
+  position: relative;
+  transition: background .14s;
+  overflow: hidden;
+  user-select: none;
+}
+.kpi-cell:last-child  { border-right: none; }
+.kpi-cell:hover       { background: var(--panel); }
+.kpi-cell--open       { background: var(--panel); }
+
+/* accent line top */
+.kpi-cell__bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--kc, var(--t4));
+  opacity: .8;
+  transition: opacity .15s;
+}
+.kpi-cell:hover .kpi-cell__bar,
+.kpi-cell--open .kpi-cell__bar { opacity: 1; }
+
+/* subtle glow on open */
+.kpi-cell--open::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 30% 0%, rgba(232,83,58,.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.kpi-cell__label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--t4);
+  font-family: var(--mono);
+  margin-bottom: 9px;
+}
+.kpi-cell__value {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--t1);
+  letter-spacing: -1.2px;
+  line-height: 1;
+  margin-bottom: 8px;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  padding-right: var(--gauge-pad, 0px);
+}
+.kpi-cell__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+.kpi-cell__sub {
+  font-size: 10px;
+  color: var(--t4);
+  font-family: var(--mono);
+}
+.kpi-cell__badge {
+  font-size: 9px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-family: var(--mono);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.kpi-cell__badge--pos  { background: var(--pos-dim);  color: var(--pos); }
+.kpi-cell__badge--neg  { background: var(--neg-dim);  color: var(--neg); }
+.kpi-cell__badge--neu  { background: var(--warn-dim); color: var(--warn); }
+
+/* circular gauge */
+.kpi-gauge {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.kpi-gauge__pct {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  font-weight: 700;
+  font-family: var(--mono);
+}
+
+/* ── Tab Bar ── */
+.tabbar {
+  height: 42px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: stretch;
+  padding: 0 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex-shrink: 0;
+}
+.tabbar::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--t3);
+  font-size: 11.5px;
+  font-weight: 500;
+  padding: 0 14px;
+  height: 100%;
+  cursor: pointer;
+  transition: color .14s, border-color .14s;
+  white-space: nowrap;
+  margin-bottom: -1px;
+  font-family: var(--sans);
+  position: relative;
+  letter-spacing: -.1px;
+}
+.tab-btn:hover { color: var(--t2); }
+.tab-btn.active {
+  color: var(--t1);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+.tab-btn--disabled {
+  opacity: .3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.tab-dis-icon { font-size: 8px; opacity: .6; }
+
+.tab-end {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  font-size: 9px;
+  font-family: var(--mono);
+  color: var(--t4);
+  letter-spacing: .06em;
+  padding-right: 2px;
+  gap: 4px;
+}
+.tab-end__dot {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--t4);
+}
+
+/* ── Tab Content ── */
+.tab-body {
+  flex: 1;
+  padding: 20px 20px 80px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+  .kpi-cell:nth-child(3) { border-right: none; }
+}
+@media (max-width: 580px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .kpi-cell:nth-child(2),
+  .kpi-cell:nth-child(4) { border-right: none; }
+  .kpi-cell__value { font-size: 21px; }
+  .topbar { padding: 0 14px; }
+  .tab-body { padding: 14px 14px 60px; }
+}
+`
 
 export default function Dashboard({ data, onReset }) {
   const [tab, setTab]                   = useState('lr')
@@ -181,78 +442,7 @@ export default function Dashboard({ data, onReset }) {
   return (
     <CoaContext.Provider value={{ openCoa: setCoaDrilldown, lrData: filteredLr }}>
       <style>{css}</style>
-      <style>{`
-        .dash-shell{min-height:100vh;background:var(--bg);display:flex;flex-direction:column}
-
-        /* topbar */
-        .topbar{height:48px;background:var(--surface);border-bottom:1px solid var(--rule);
-          display:flex;align-items:center;justify-content:space-between;
-          padding:0 20px;position:sticky;top:0;z-index:50;flex-shrink:0;gap:12px}
-        .topbar-left{display:flex;align-items:center;gap:10px}
-        .topbar-logo{width:26px;height:26px;background:var(--accent,#e8533a);border-radius:7px;
-          display:flex;align-items:center;justify-content:center;
-          font-weight:800;font-size:13px;color:#fff;flex-shrink:0}
-        .topbar-name{font-size:13px;font-weight:700;color:var(--t1);letter-spacing:-.4px}
-        .topbar-sub{font-size:9px;color:var(--t4);text-transform:uppercase;letter-spacing:.08em}
-        .topbar-sep{width:1px;height:16px;background:var(--rule);margin:0 2px}
-        .topbar-period{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t3)}
-        .topbar-right{display:flex;align-items:center;gap:8px}
-
-        /* kpi grid */
-        .kpi-grid-new{display:grid;grid-template-columns:repeat(5,1fr);
-          border-bottom:1px solid var(--rule);background:var(--bg)}
-        .kpi-cell{padding:16px 18px 14px;background:var(--surface);
-          border-right:1px solid var(--rule);cursor:pointer;position:relative;
-          transition:background .12s;overflow:hidden}
-        .kpi-cell:last-child{border-right:none}
-        .kpi-cell:hover{background:var(--surface2,#181816)}
-        .kpi-cell--open{background:var(--surface2,#181816)}
-        .kpi-cell__accent{position:absolute;top:0;left:0;right:0;height:2px;
-          background:var(--kc);opacity:.9}
-        .kpi-cell__label{font-size:9px;text-transform:uppercase;letter-spacing:.1em;
-          color:var(--t4);margin-bottom:8px;font-family:var(--mono,monospace)}
-        .kpi-cell__value{font-size:24px;font-weight:700;color:var(--t1);
-          letter-spacing:-1px;line-height:1;margin-bottom:6px;
-          font-variant-numeric:tabular-nums}
-        .kpi-cell__bottom{display:flex;align-items:center;justify-content:space-between;gap:6px}
-        .kpi-cell__sub{font-size:10px;color:var(--t4);font-family:var(--mono,monospace)}
-        .kpi-cell__badge{font-size:9px;padding:2px 7px;border-radius:100px;
-          font-family:var(--mono,monospace);white-space:nowrap;flex-shrink:0}
-        .kpi-cell__badge--pos{background:rgba(74,222,128,.12);color:#4ade80}
-        .kpi-cell__badge--neg{background:rgba(248,113,113,.12);color:#f87171}
-        .kpi-cell__badge--neu{background:rgba(250,204,21,.1);color:#fbbf24}
-        .kpi-cell__gauge{position:absolute;right:12px;top:50%;transform:translateY(-50%)}
-
-        /* tabs */
-        .tabbar-new{background:var(--surface);border-bottom:1px solid var(--rule);
-          display:flex;align-items:stretch;padding:0 20px;gap:0;
-          overflow-x:auto;scrollbar-width:none}
-        .tabbar-new::-webkit-scrollbar{display:none}
-        .tab-new{display:flex;align-items:center;gap:6px;background:transparent;border:none;
-          border-bottom:2px solid transparent;color:var(--t3);
-          font-size:12px;font-weight:500;padding:0 14px;height:40px;cursor:pointer;
-          transition:color .12s,border-color .12s;white-space:nowrap;margin-bottom:-1px;
-          font-family:inherit}
-        .tab-new:hover{color:var(--t2)}
-        .tab-new.active{color:var(--t1);border-bottom-color:var(--accent,#e8533a)}
-        .tab-new--disabled{opacity:.35;cursor:not-allowed}
-        .tab-spacer{margin-left:auto;display:flex;align-items:center;
-          font-size:9px;color:var(--t4);text-transform:uppercase;letter-spacing:.08em;padding-right:2px}
-
-        /* content */
-        .tab-body{flex:1;padding:20px 20px 80px;overflow:auto;
-          display:flex;flex-direction:column;gap:14px}
-
-        @media(max-width:860px){
-          .kpi-grid-new{grid-template-columns:repeat(3,1fr)}
-          .kpi-cell:nth-child(3){border-right:none}
-        }
-        @media(max-width:540px){
-          .kpi-grid-new{grid-template-columns:repeat(2,1fr)}
-          .kpi-cell:nth-child(2),.kpi-cell:nth-child(4){border-right:none}
-          .kpi-cell__value{font-size:20px}
-        }
-      `}</style>
+      <style>{SHELL_CSS}</style>
 
       <div className="dash-shell">
 
@@ -260,7 +450,7 @@ export default function Dashboard({ data, onReset }) {
         <header className="topbar">
           <div className="topbar-left">
             <div className="topbar-logo">F</div>
-            <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
+            <div className="topbar-info">
               <span className="topbar-name">IVP FIN 30</span>
               <span className="topbar-sub">Financial Dashboard</span>
             </div>
@@ -277,45 +467,63 @@ export default function Dashboard({ data, onReset }) {
         </header>
 
         {/* ── KPI Grid ── */}
-        <div style={{ position:'relative', zIndex:40 }}>
-          <div className="kpi-grid-new">
+        <div style={{ position: 'relative', zIndex: 40 }}>
+          <div className="kpi-grid">
             {kpis.map((k, i) => {
               const isOpen = drilldown?.key === k.key
+
               const gaugeEl = k.gauge != null ? (() => {
-                const r = 18, cx = 22, cy = 22, circ = 2 * Math.PI * r
+                const r = 17, cx = 21, cy = 21, circ = 2 * Math.PI * r
                 const dash = circ * Math.min(Math.abs(k.gauge), 100) / 100
                 return (
-                  <div className="kpi-cell__gauge">
-                    <svg viewBox="0 0 44 44" width={44} height={44}>
-                      <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--rule2,rgba(255,255,255,.07))" strokeWidth="3"/>
+                  <div className="kpi-gauge">
+                    <svg viewBox="0 0 42 42" width={42} height={42}>
                       <circle cx={cx} cy={cy} r={r} fill="none"
-                        stroke={k.gaugeColor} strokeWidth="3"
+                        stroke="rgba(255,255,255,.06)" strokeWidth="2.5"/>
+                      <circle cx={cx} cy={cy} r={r} fill="none"
+                        stroke={k.gaugeColor} strokeWidth="2.5"
                         strokeDasharray={`${dash} ${circ}`}
                         strokeLinecap="round"
-                        style={{ transition:'stroke-dasharray .5s ease', transform:'rotate(-90deg)', transformOrigin:'50% 50%' }}
+                        style={{
+                          transition: 'stroke-dasharray .55s cubic-bezier(.4,0,.2,1)',
+                          transform: 'rotate(-90deg)',
+                          transformOrigin: '50% 50%',
+                        }}
                       />
                     </svg>
-                    <div style={{
-                      position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center',
-                      fontSize:9, fontWeight:700, color:k.gaugeColor,
-                    }}>{k.gauge}%</div>
+                    <div className="kpi-gauge__pct" style={{ color: k.gaugeColor }}>
+                      {k.gauge}%
+                    </div>
                   </div>
                 )
               })() : null
 
               return (
-                <div key={i}
+                <div
+                  key={i}
                   ref={el => kpiRefs.current[k.key] = el}
                   className={`kpi-cell${isOpen ? ' kpi-cell--open' : ''}`}
-                  style={{ '--kc': k.color, paddingRight: k.gauge != null ? '64px' : '18px' }}
-                  onClick={e => { e.stopPropagation(); setDrilldown(isOpen ? null : { key:k.key, el:kpiRefs.current[k.key] }) }}
+                  style={{ '--kc': k.color }}
+                  onClick={e => {
+                    e.stopPropagation()
+                    setDrilldown(isOpen ? null : { key: k.key, el: kpiRefs.current[k.key] })
+                  }}
                 >
-                  <div className="kpi-cell__accent"/>
+                  <div className="kpi-cell__bar"/>
                   <div className="kpi-cell__label">{k.label}</div>
-                  <div className="kpi-cell__value">{k.value}</div>
+                  <div
+                    className="kpi-cell__value"
+                    style={{ paddingRight: k.gauge != null ? '52px' : 0 }}
+                  >
+                    {k.value}
+                  </div>
                   <div className="kpi-cell__bottom">
                     <div className="kpi-cell__sub">{k.sub}</div>
-                    {k.badge && <div className={`kpi-cell__badge kpi-cell__badge--${k.badge.type}`}>{k.badge.text}</div>}
+                    {k.badge && (
+                      <div className={`kpi-cell__badge kpi-cell__badge--${k.badge.type}`}>
+                        {k.badge.text}
+                      </div>
+                    )}
                   </div>
                   {gaugeEl}
                 </div>
@@ -333,21 +541,25 @@ export default function Dashboard({ data, onReset }) {
         </div>
 
         {/* ── Tab Bar ── */}
-        <div className="tabbar-new">
+        <div className="tabbar">
           {TABS.map(t => {
             const dis = t.needsNeraca && !hasNeraca
             return (
-              <button key={t.id}
-                className={`tab-new${tab === t.id ? ' active' : ''}${dis ? ' tab-new--disabled' : ''}`}
+              <button
+                key={t.id}
+                className={`tab-btn${tab === t.id ? ' active' : ''}${dis ? ' tab-btn--disabled' : ''}`}
                 onClick={() => !dis && setTab(t.id)}
                 title={dis ? 'Upload file Neraca untuk mengaktifkan tab ini' : undefined}
               >
                 {t.label}
-                {dis && <span style={{ fontSize:8, opacity:.5 }}>✕</span>}
+                {dis && <span className="tab-dis-icon">✕</span>}
               </button>
             )
           })}
-          <div className="tab-spacer">{activeMonths.length} bln</div>
+          <div className="tab-end">
+            <span className="tab-end__dot"/>
+            {activeMonths.length} bln
+          </div>
         </div>
 
         {/* ── Content ── */}

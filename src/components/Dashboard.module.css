@@ -1,143 +1,97 @@
-/* ============================================================
-   dashboard.module.css — Finsight Financial Dashboard
-   Refined dark + warm terracotta palette
-   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap');
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap');
-
-/* ── Variables ── */
+/* ─── Variables ─── */
 :root {
-  --bg:       #0c0b09;
-  --canvas:   #080706;
-  --surface:  #131210;
-  --surface2: #1a1916;
-  --surface3: #201e1b;
-  --card:     #1e1c19;
-  --raised:   #252219;
-  --sunken:   #090807;
+  --bg:       #08090a;
+  --surface:  #0e1012;
+  --surface2: #141618;
+  --surface3: #1a1d20;
+  --card:     #181b1e;
+  --raised:   #1f2226;
 
-  --t1: #edeae3;
-  --t2: #c2bbb2;
-  --t3: #857d74;
-  --t4: #514b45;
+  --t1: #eef0f2;
+  --t2: #b8bec4;
+  --t3: #6b737c;
+  --t4: #3f454c;
 
-  --rule:  rgba(255,255,255,.072);
-  --rule2: rgba(255,255,255,.038);
+  --rule:  rgba(255,255,255,.07);
+  --rule2: rgba(255,255,255,.04);
 
-  --accent:      #e8533a;
-  --accent-dim:  rgba(232,83,58,.13);
-  --accent-glow: rgba(232,83,58,.22);
-  --accent2:     #3dbf8a;
-  --accent3:     #7b6ef6;
+  --accent:     #ff5733;
+  --accent-dim: rgba(255,87,51,.1);
+  --accent-hi:  rgba(255,87,51,.2);
 
-  --pos:      #4ade80;
-  --pos-dim:  rgba(74,222,128,.12);
+  --pos:      #34d399;
+  --pos-dim:  rgba(52,211,153,.1);
   --neg:      #f87171;
-  --neg-dim:  rgba(248,113,113,.12);
+  --neg-dim:  rgba(248,113,113,.1);
   --warn:     #fbbf24;
-  --warn-dim: rgba(251,191,36,.12);
-  --lime:     #a3e635;
+  --warn-dim: rgba(251,191,36,.1);
   --blue:     #60a5fa;
   --purple:   #a78bfa;
+  --lime:     #a3e635;
 
-  --sans:   'DM Sans', system-ui, sans-serif;
-  --mono:   'DM Mono', 'Fira Code', monospace;
-
-  --shadow-sm: 0 1px 3px rgba(0,0,0,.45);
-  --shadow-md: 0 4px 20px rgba(0,0,0,.55);
-  --shadow-lg: 0 16px 48px rgba(0,0,0,.65);
+  --sans:    'DM Sans', system-ui, sans-serif;
+  --display: 'Syne', system-ui, sans-serif;
+  --mono:    'DM Mono', 'Fira Code', monospace;
 }
 
-/* ── Reset ── */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── Shell ── */
 .root {
   min-height: 100vh;
   background: var(--bg);
   display: flex;
   flex-direction: column;
   font-family: var(--sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-size: 13px;
   color: var(--t1);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* subtle grain overlay */
-.root::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 999;
-  opacity: .022;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 200px 200px;
-}
-
-/* ══════════════════════════════
-   HEADER / TOPBAR
-══════════════════════════════ */
+/* ════════════════ HEADER ════════════════ */
 .header {
   position: sticky;
   top: 0;
   z-index: 100;
-  height: 52px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
-  background: rgba(13,12,10,.9);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: rgba(8,9,10,.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--rule);
+  box-shadow: inset 0 1px 0 rgba(255,87,51,.22);
   flex-shrink: 0;
   gap: 12px;
 }
 
-.headerLeft  { display: flex; align-items: center; gap: 14px; }
-.headerRight { display: flex; align-items: center; gap: 8px;  }
-
-/* Logo */
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  text-decoration: none;
-}
+.headerLeft  { display: flex; align-items: center; gap: 16px; }
+.headerRight { display: flex; align-items: center; gap: 8px; }
 
 .logoMark {
-  width: 28px;
-  height: 28px;
-  background: linear-gradient(140deg, #e8533a 0%, #c23628 100%);
+  width: 30px; height: 30px;
+  background: var(--accent);
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--sans);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--display);
   font-weight: 800;
-  font-size: 13px;
+  font-size: 15px;
   color: #fff;
   flex-shrink: 0;
-  box-shadow: 0 2px 10px rgba(232,83,58,.35);
   letter-spacing: -.5px;
 }
 
-.logoStack {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
+.logoStack { display: flex; flex-direction: column; gap: 0; }
 
 .logoName {
-  font-size: 13px;
+  font-family: var(--display);
+  font-size: 14px;
   font-weight: 700;
   color: var(--t1);
-  letter-spacing: -.45px;
+  letter-spacing: -.3px;
   line-height: 1.15;
 }
 
@@ -146,91 +100,76 @@
   font-family: var(--mono);
   color: var(--t4);
   text-transform: uppercase;
-  letter-spacing: .1em;
+  letter-spacing: .12em;
 }
 
-/* Divider */
 .headerSep {
-  width: 1px;
-  height: 18px;
+  width: 1px; height: 20px;
   background: var(--rule);
   flex-shrink: 0;
 }
 
-/* Period badge */
 .periodBadge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 3px 10px;
+  display: flex; align-items: center; gap: 7px;
+  padding: 4px 11px;
   border: 1px solid var(--rule);
   border-radius: 100px;
   font-family: var(--mono);
   font-size: 10px;
   color: var(--t3);
-  letter-spacing: .03em;
+  background: var(--surface2);
 }
 
 .periodDot {
-  width: 5px;
-  height: 5px;
+  width: 5px; height: 5px;
   border-radius: 50%;
   background: var(--pos);
-  box-shadow: 0 0 5px rgba(74,222,128,.5);
   flex-shrink: 0;
+  box-shadow: 0 0 6px rgba(52,211,153,.6);
   animation: blink 2.4s ease-in-out infinite;
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 1;   }
-  50%       { opacity: .3; }
+  0%,100% { opacity: 1; }
+  50%      { opacity: .35; }
 }
 
-/* Reset button */
 .btnReset {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
+  height: 32px;
+  padding: 0 14px;
   background: transparent;
   border: 1px solid var(--rule);
+  border-radius: 8px;
   color: var(--t3);
   font-family: var(--sans);
   font-size: 11px;
   font-weight: 500;
-  padding: 5px 12px;
-  border-radius: 7px;
   cursor: pointer;
-  transition: color .14s, border-color .14s, background .14s, transform .1s;
+  transition: all .14s;
   white-space: nowrap;
-  height: 30px;
+  display: inline-flex; align-items: center; gap: 5px;
 }
 
 .btnReset:hover {
-  color: var(--t2);
+  color: var(--t1);
   border-color: var(--t4);
-  background: rgba(255,255,255,.04);
+  background: var(--surface2);
 }
 
-.btnReset:active {
-  transform: scale(.97);
-  background: rgba(255,255,255,.07);
-}
+.btnReset:active { transform: scale(.97); }
 
-/* ══════════════════════════════
-   KPI STRIP
-══════════════════════════════ */
+/* ════════════════ KPI STRIP ════════════════ */
 .kpiStrip {
   position: relative;
   z-index: 40;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   border-bottom: 1px solid var(--rule);
-  background: var(--bg);
 }
 
 .kpiCard {
   position: relative;
-  padding: 18px 20px 15px;
+  padding: 20px 22px 17px;
   background: var(--surface);
   border-right: 1px solid var(--rule);
   cursor: pointer;
@@ -243,61 +182,49 @@
 .kpiCard:hover       { background: var(--surface2); }
 .kpiCardOpen         { background: var(--surface2); }
 
-/* accent bar */
 .kpiBar {
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 2px;
   background: var(--kc, var(--t4));
-  opacity: .75;
-  transition: opacity .15s;
+  opacity: .65;
+  transition: opacity .15s, height .15s;
 }
 .kpiCard:hover .kpiBar,
-.kpiCardOpen   .kpiBar { opacity: 1; }
-
-/* open radial glow */
-.kpiCardOpen::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 90% 55% at 20% 0%, rgba(232,83,58,.045) 0%, transparent 70%);
-  pointer-events: none;
-}
+.kpiCardOpen   .kpiBar { opacity: 1; height: 3px; }
 
 .kpiLabel {
-  font-family: var(--mono);
   font-size: 9px;
+  font-family: var(--mono);
   text-transform: uppercase;
-  letter-spacing: .11em;
+  letter-spacing: .12em;
   color: var(--t4);
-  margin-bottom: 9px;
+  margin-bottom: 10px;
 }
 
 .kpiValue {
-  font-size: 26px;
+  font-family: var(--display);
+  font-size: 30px;
   font-weight: 700;
-  font-family: var(--mono);
   font-variant-numeric: tabular-nums;
-  letter-spacing: -1.2px;
+  letter-spacing: -1.5px;
   line-height: 1;
   color: var(--t1);
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .kpiBottom {
-  display: flex;
-  align-items: center;
+  display: flex; align-items: center;
   justify-content: space-between;
-  gap: 6px;
+  gap: 8px;
 }
 
 .kpiSub {
-  font-family: var(--mono);
   font-size: 10px;
+  font-family: var(--mono);
   color: var(--t4);
 }
 
-/* Badges */
 .kpiBadge {
   font-size: 9px;
   font-weight: 600;
@@ -311,30 +238,24 @@
 .kpiBadgeNeg  { background: var(--neg-dim);  color: var(--neg); }
 .kpiBadgeNeu  { background: var(--warn-dim); color: var(--warn); }
 
-/* Circular gauge */
 .kpiGauge {
   position: absolute;
-  right: 14px;
-  top: 50%;
+  right: 16px; top: 50%;
   transform: translateY(-50%);
 }
 
 .kpiGaugePct {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   font-size: 8px;
   font-weight: 700;
   font-family: var(--mono);
 }
 
-/* ══════════════════════════════
-   TAB BAR
-══════════════════════════════ */
+/* ════════════════ TAB BAR ════════════════ */
 .tabBar {
-  height: 42px;
+  height: 44px;
   background: var(--surface);
   border-bottom: 1px solid var(--rule);
   display: flex;
@@ -344,27 +265,23 @@
   scrollbar-width: none;
   flex-shrink: 0;
 }
-
 .tabBar::-webkit-scrollbar { display: none; }
 
 .tabBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
+  display: inline-flex; align-items: center; gap: 5px;
   background: transparent;
   border: none;
   border-bottom: 2px solid transparent;
-  color: var(--t3);
+  color: var(--t4);
   font-family: var(--sans);
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 500;
-  padding: 0 14px;
+  padding: 0 16px;
   height: 100%;
   cursor: pointer;
   transition: color .14s, border-color .14s;
   white-space: nowrap;
   margin-bottom: -1px;
-  letter-spacing: -.1px;
 }
 
 .tabBtn:hover { color: var(--t2); }
@@ -375,26 +292,18 @@
   font-weight: 600;
 }
 
-.tabBtnDisabled {
-  opacity: .3;
-  cursor: not-allowed;
-  pointer-events: none;
-}
+.tabBtnDisabled { opacity: .25; cursor: not-allowed; pointer-events: none; }
+.tabDisIcon     { font-size: 8px; }
 
-.tabDisIcon { font-size: 8px; opacity: .6; }
-
-/* right-side counter */
 .tabEnd {
   margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 5px;
+  display: flex; align-items: center; gap: 5px;
   font-size: 9px;
   font-family: var(--mono);
   color: var(--t4);
-  letter-spacing: .05em;
-  padding-right: 2px;
+  letter-spacing: .08em;
   flex-shrink: 0;
+  text-transform: uppercase;
 }
 
 .tabEndDot {
@@ -403,9 +312,7 @@
   background: var(--t4);
 }
 
-/* ══════════════════════════════
-   TAB CONTENT
-══════════════════════════════ */
+/* ════════════════ CONTENT ════════════════ */
 .tabContent {
   flex: 1;
   padding: 20px 24px 80px;
@@ -417,20 +324,16 @@
   z-index: 1;
 }
 
-/* ══════════════════════════════
-   RESPONSIVE
-══════════════════════════════ */
-@media (max-width: 900px) {
-  .kpiStrip                    { grid-template-columns: repeat(3, 1fr); }
-  .kpiCard:nth-child(3)        { border-right: none; }
-  .header                      { padding: 0 16px; }
-  .tabBar, .tabContent         { padding-left: 16px; padding-right: 16px; }
+/* ════════════════ RESPONSIVE ════════════════ */
+@media (max-width: 960px) {
+  .kpiStrip             { grid-template-columns: repeat(3, 1fr); }
+  .kpiCard:nth-child(3) { border-right: none; }
+  .header, .tabBar      { padding-left: 16px; padding-right: 16px; }
+  .tabContent           { padding: 16px 16px 60px; }
 }
-
-@media (max-width: 580px) {
-  .kpiStrip                    { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 600px) {
+  .kpiStrip                     { grid-template-columns: repeat(2, 1fr); }
   .kpiCard:nth-child(2),
-  .kpiCard:nth-child(4)        { border-right: none; }
-  .kpiValue                    { font-size: 21px; }
-  .tabContent                  { padding-bottom: 60px; }
+  .kpiCard:nth-child(4)         { border-right: none; }
+  .kpiValue                     { font-size: 24px; }
 }

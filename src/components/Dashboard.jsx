@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { ACCT, totalOf, lastOf } from '../lib/parser'
 import { css } from '../lib/dashboardCss'
-import styles from '../dashboard.module.css'
+import styles from './dashboard.module.css'
 import PeriodPicker            from './ui/PeriodPicker'
 import KpiDrilldown            from './ui/KpiDrilldown'
 import RatioPanel, { Section } from './ui/RatioPanel'
@@ -99,14 +99,14 @@ export default function Dashboard({ data, onReset }) {
   const kpis = [
     {
       key: 'pendapatan', label: 'Pendapatan Bersih',
-      value: fmt(kpi.rev), sub: `${activeMonths.length} bulan dipilih`,
+      value: fmt(kpi.rev), sub: `${activeMonths.length} bulan`,
       color: 'var(--lime)',
       gauge: kpi.rev > 0 ? Math.round((kpi.hpp / kpi.rev) * 100) : null,
       gaugeColor: 'var(--warn)', badge: null,
     },
     {
       key: 'laba', label: 'Laba Bersih',
-      value: fmt(kpi.laba), sub: `Net Margin ${(kpi.nm ?? 0).toFixed(1)}%`,
+      value: fmt(kpi.laba), sub: `NM ${(kpi.nm ?? 0).toFixed(1)}%`,
       color: kpi.laba >= 0 ? 'var(--pos)' : 'var(--neg)',
       gauge: kpi.nm != null ? Math.min(Math.max(Math.round(kpi.nm), -100), 100) : null,
       gaugeColor: kpi.laba >= 0 ? 'var(--pos)' : 'var(--neg)',
@@ -114,7 +114,7 @@ export default function Dashboard({ data, onReset }) {
     },
     {
       key: 'gm', label: 'Gross Margin',
-      value: `${(kpi.gm ?? 0).toFixed(1)}%`, sub: `Laba Kotor ${fmt(kpi.bruto)}`,
+      value: `${(kpi.gm ?? 0).toFixed(1)}%`, sub: `Kotor ${fmt(kpi.bruto)}`,
       color: kpi.gm == null ? 'var(--t4)' : kpi.gm >= 30 ? 'var(--pos)' : kpi.gm >= 0 ? 'var(--warn)' : 'var(--neg)',
       gauge: kpi.gm != null ? Math.min(Math.round(Math.abs(kpi.gm)), 100) : null,
       gaugeColor: kpi.gm == null ? 'var(--t4)' : kpi.gm >= 30 ? 'var(--pos)' : kpi.gm >= 0 ? 'var(--warn)' : 'var(--neg)',
@@ -124,7 +124,7 @@ export default function Dashboard({ data, onReset }) {
     },
     {
       key: 'aktiva', label: 'Total Aktiva',
-      value: fmt(kpi.aset), sub: 'Saldo akhir periode',
+      value: fmt(kpi.aset), sub: 'Saldo akhir',
       color: 'var(--blue)', gauge: null, badge: null,
     },
     {
@@ -181,7 +181,6 @@ export default function Dashboard({ data, onReset }) {
 
   return (
     <CoaContext.Provider value={{ openCoa: setCoaDrilldown, lrData: filteredLr }}>
-      {/* shared component styles (RatioPanel, Section, tables, dll) */}
       <style>{css}</style>
 
       <div className={styles.root}>
@@ -189,12 +188,10 @@ export default function Dashboard({ data, onReset }) {
         {/* ── Header ── */}
         <header className={styles.header}>
           <div className={styles.headerLeft}>
-            <div className={styles.logo}>
-              <div className={styles.logoMark}>F</div>
-              <div className={styles.logoStack}>
-                <span className={styles.logoName}>IVP FIN 30</span>
-                <span className={styles.logoSub}>Financial Dashboard</span>
-              </div>
+            <div className={styles.logoMark}>F</div>
+            <div className={styles.logoStack}>
+              <span className={styles.logoName}>IVP FIN 30</span>
+              <span className={styles.logoSub}>Financial Dashboard</span>
             </div>
             <div className={styles.headerSep}/>
             <div className={styles.periodBadge}>
@@ -254,7 +251,7 @@ export default function Dashboard({ data, onReset }) {
               <div
                 key={i}
                 ref={el => kpiRefs.current[k.key] = el}
-                className={[styles.kpiCard, isOpen ? styles.kpiCardOpen : ''].join(' ')}
+                className={[styles.kpiCard, isOpen ? styles.kpiCardOpen : ''].filter(Boolean).join(' ')}
                 style={{ '--kc': k.color }}
                 onClick={e => {
                   e.stopPropagation()
@@ -263,10 +260,8 @@ export default function Dashboard({ data, onReset }) {
               >
                 <div className={styles.kpiBar}/>
                 <div className={styles.kpiLabel}>{k.label}</div>
-                <div
-                  className={styles.kpiValue}
-                  style={{ paddingRight: k.gauge != null ? '52px' : 0 }}
-                >
+                <div className={styles.kpiValue}
+                  style={{ paddingRight: k.gauge != null ? '54px' : 0 }}>
                   {k.value}
                 </div>
                 <div className={styles.kpiBottom}>

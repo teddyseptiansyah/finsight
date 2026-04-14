@@ -224,4 +224,3 @@ export const css = `
     50%      { box-shadow:0 0 10px rgba(52,211,153,.6); opacity:1; }
   }
   .chip-saved { display:inline-flex; align-items:center; gap:5px; font-size:9px; font-weight:600; padding:3px 9px; letter-spacing:.08em; }
-`

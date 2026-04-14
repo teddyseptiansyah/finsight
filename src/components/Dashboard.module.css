@@ -1,11 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap');
 
-/* ─── Variables ─── */
 :root {
   --bg:       #07080a;
   --surface:  #0d0f11;
-  --surface2: #121518;
-  --surface3: #181c20;
+  --surface2: #1a1e23;
+  --surface3: #222830;
   --card:     #161a1e;
   --raised:   #1e2328;
 
@@ -46,7 +45,6 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── Shell ── */
 .root {
   min-height: 100vh;
   background: var(--bg);
@@ -60,26 +58,20 @@
 
 /* ════════════════ HEADER ════════════════ */
 .header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  position: sticky; top: 0; z-index: 100;
   height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between;
   padding: 0 20px;
   background: rgba(7,8,10,.92);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border-bottom: 1px solid var(--rule);
-  flex-shrink: 0;
-  gap: 12px;
+  flex-shrink: 0; gap: 12px;
 }
 
 .headerLeft  { display: flex; align-items: center; gap: 14px; min-width: 0; }
 .headerRight { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
-/* Logo */
 .logo { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
 
 .logoMark {
@@ -87,8 +79,7 @@
   background: linear-gradient(135deg, #ff5733 0%, #cc3311 100%);
   border-radius: var(--radius-sm);
   display: flex; align-items: center; justify-content: center;
-  font-family: var(--display);
-  font-weight: 800; font-size: 14px; color: #fff;
+  font-family: var(--display); font-weight: 800; font-size: 14px; color: #fff;
   flex-shrink: 0;
   box-shadow: 0 2px 12px rgba(255,87,51,.3);
 }
@@ -96,8 +87,7 @@
 .logoStack { display: flex; flex-direction: column; }
 
 .logoName {
-  font-family: var(--display);
-  font-size: 13px; font-weight: 700;
+  font-family: var(--display); font-size: 13px; font-weight: 700;
   color: var(--t1); letter-spacing: -.3px; line-height: 1.2;
 }
 
@@ -106,19 +96,14 @@
   color: var(--t4); text-transform: uppercase; letter-spacing: .1em;
 }
 
-.headerSep {
-  width: 1px; height: 18px;
-  background: var(--rule); flex-shrink: 0;
-}
+.headerSep { width: 1px; height: 18px; background: var(--rule); flex-shrink: 0; }
 
 .periodBadge {
   display: flex; align-items: center; gap: 6px;
   padding: 4px 10px;
-  border: 1px solid var(--rule);
-  border-radius: 100px;
+  border: 1px solid var(--rule); border-radius: 100px;
   font-family: var(--mono); font-size: 10px; color: var(--t3);
-  background: var(--surface2);
-  white-space: nowrap;
+  background: var(--surface2); white-space: nowrap;
 }
 
 .periodDot {
@@ -135,30 +120,20 @@
 
 .btnReset {
   height: 30px; padding: 0 12px;
-  background: transparent;
-  border: 1px solid var(--rule);
+  background: transparent; border: 1px solid var(--rule);
   border-radius: var(--radius-sm);
-  color: var(--t3); font-family: var(--sans);
-  font-size: 11px; font-weight: 500;
-  cursor: pointer; transition: all .14s;
-  white-space: nowrap;
+  color: var(--t3); font-family: var(--sans); font-size: 11px; font-weight: 500;
+  cursor: pointer; transition: all .14s; white-space: nowrap;
   display: inline-flex; align-items: center; gap: 5px;
 }
-
-.btnReset:hover {
-  color: var(--t1); border-color: var(--t4);
-  background: var(--surface2);
-}
-
+.btnReset:hover  { color: var(--t1); border-color: var(--t4); background: var(--surface2); }
 .btnReset:active { transform: scale(.97); }
 
 /* ════════════════ KPI STRIP ════════════════ */
 .kpiStrip {
   position: relative; z-index: 40;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  display: grid; grid-template-columns: repeat(5, 1fr);
   border-bottom: 1px solid var(--rule);
-  background: var(--surface);
 }
 
 .kpiCard {
@@ -172,16 +147,15 @@
 }
 
 .kpiCard:last-child { border-right: none; }
-.kpiCard:hover  { background: var(--surface3: #252a30); }
-.kpiCardOpen    { background: var(--surface3: #252a30); }
-.tabBtn:hover { color: var(--t1); }
+
+/* hover: cukup terangkan background, jangan ubah warna teks */
+.kpiCard:hover { background: var(--surface2); }
+.kpiCardOpen   { background: var(--surface2); }
 
 .kpiBar {
   position: absolute; top: 0; left: 0; right: 0;
-  height: 2px;
-  background: var(--kc, var(--t4));
-  opacity: .6;
-  transition: opacity .15s, height .15s;
+  height: 2px; background: var(--kc, var(--t4));
+  opacity: .6; transition: opacity .15s, height .15s;
 }
 .kpiCard:hover .kpiBar,
 .kpiCardOpen   .kpiBar { opacity: 1; height: 3px; }
@@ -192,12 +166,14 @@
   color: var(--t4); margin-bottom: 10px;
 }
 
+/* PENTING: warna teks nilai selalu --t1, tidak berubah saat hover */
 .kpiValue {
   font-family: var(--display);
   font-size: 28px; font-weight: 700;
   font-variant-numeric: tabular-nums;
   letter-spacing: -1.2px; line-height: 1;
-  color: var(--t1); margin-bottom: 10px;
+  color: var(--t1);
+  margin-bottom: 10px;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
@@ -207,9 +183,8 @@
 }
 
 .kpiSub {
-  font-size: 10px; font-family: var(--mono);
-  color: var(--t4); overflow: hidden;
-  text-overflow: ellipsis; white-space: nowrap;
+  font-size: 10px; font-family: var(--mono); color: var(--t4);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
 .kpiBadge {
@@ -223,7 +198,7 @@
 
 .kpiGauge {
   position: absolute; right: 14px; top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-50%); opacity: .8;
 }
 
 .kpiGaugePct {
@@ -234,13 +209,11 @@
 
 /* ════════════════ TAB BAR ════════════════ */
 .tabBar {
-  height: 42px;
-  background: var(--surface);
+  height: 42px; background: var(--surface);
   border-bottom: 1px solid var(--rule);
   display: flex; align-items: stretch;
-  padding: 0 20px;
-  overflow-x: auto; scrollbar-width: none;
-  flex-shrink: 0;
+  padding: 0 20px; overflow-x: auto;
+  scrollbar-width: none; flex-shrink: 0;
 }
 .tabBar::-webkit-scrollbar { display: none; }
 
@@ -251,15 +224,14 @@
   color: var(--t4); font-family: var(--sans);
   font-size: 12px; font-weight: 500;
   padding: 0 14px; height: 100%;
-  cursor: pointer;
-  transition: color .14s, border-color .14s;
+  cursor: pointer; transition: color .14s, border-color .14s;
   white-space: nowrap; margin-bottom: -1px;
 }
 
-.tabBtn:hover       { color: var(--t2); }
-.tabBtnActive       { color: var(--t1) !important; border-bottom-color: var(--accent) !important; font-weight: 600; }
-.tabBtnDisabled     { opacity: .25; cursor: not-allowed; pointer-events: none; }
-.tabDisIcon         { font-size: 8px; }
+.tabBtn:hover   { color: var(--t2); }
+.tabBtnActive   { color: var(--t1) !important; border-bottom-color: var(--accent) !important; font-weight: 600; }
+.tabBtnDisabled { opacity: .25; cursor: not-allowed; pointer-events: none; }
+.tabDisIcon     { font-size: 8px; }
 
 .tabEnd {
   margin-left: auto;
@@ -269,17 +241,13 @@
   flex-shrink: 0; text-transform: uppercase;
 }
 
-.tabEndDot {
-  width: 4px; height: 4px;
-  border-radius: 50%; background: var(--t4);
-}
+.tabEndDot { width: 4px; height: 4px; border-radius: 50%; background: var(--t4); }
 
 /* ════════════════ CONTENT ════════════════ */
 .tabContent {
-  flex: 1;
-  padding: 20px 20px 80px;
-  overflow: auto;
-  display: flex; flex-direction: column; gap: 14px;
+  flex: 1; padding: 20px 20px 80px;
+  overflow: auto; display: flex;
+  flex-direction: column; gap: 14px;
   position: relative; z-index: 1;
 }
 
@@ -290,29 +258,23 @@
 }
 
 @media (max-width: 640px) {
-  .header { padding: 0 14px; height: 52px; }
+  .header   { padding: 0 14px; height: 52px; }
   .logoSub, .headerSep, .periodBadge { display: none; }
 
-  .kpiStrip {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0;
-  }
-  .kpiCard {
-    padding: 14px 14px 12px;
-    border-bottom: 1px solid var(--rule);
-  }
+  .kpiStrip { grid-template-columns: repeat(2, 1fr); }
+  .kpiCard  { padding: 14px 14px 12px; border-bottom: 1px solid var(--rule); }
   .kpiCard:nth-child(2),
   .kpiCard:nth-child(4) { border-right: none; }
   .kpiCard:nth-child(5) { grid-column: span 2; border-right: none; }
 
-  .kpiValue   { font-size: 22px; letter-spacing: -.8px; }
-  .kpiLabel   { font-size: 8px; margin-bottom: 7px; }
-  .kpiSub     { font-size: 9px; }
-  .kpiGauge   { display: none; }
+  .kpiValue  { font-size: 22px; letter-spacing: -.8px; }
+  .kpiLabel  { font-size: 8px; margin-bottom: 7px; }
+  .kpiSub    { font-size: 9px; }
+  .kpiGauge  { display: none; }
 
-  .tabBar     { padding: 0 12px; height: 40px; }
-  .tabBtn     { padding: 0 10px; font-size: 11px; }
-  .tabEnd     { display: none; }
+  .tabBar    { padding: 0 12px; height: 40px; }
+  .tabBtn    { padding: 0 10px; font-size: 11px; }
+  .tabEnd    { display: none; }
 
   .tabContent { padding: 12px 12px 70px; gap: 10px; }
 }

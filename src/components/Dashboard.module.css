@@ -172,8 +172,9 @@
 }
 
 .kpiCard:last-child { border-right: none; }
-.kpiCard:hover      { background: var(--surface2); }
-.kpiCardOpen        { background: var(--surface2); }
+.kpiCard:hover  { background: var(--surface3); }
+.kpiCardOpen    { background: var(--surface3); }
+.tabBtn:hover { color: var(--t1); }
 
 .kpiBar {
   position: absolute; top: 0; left: 0; right: 0;

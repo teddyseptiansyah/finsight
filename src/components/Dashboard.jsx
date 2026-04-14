@@ -100,14 +100,14 @@ export default function Dashboard({ data, onReset }) {
     {
       key: 'pendapatan', label: 'Pendapatan Bersih',
       value: fmt(kpi.rev), sub: `${activeMonths.length} bulan dipilih`,
-      color: 'var(--lime)',
+      accentColor: 'var(--lime)',
       gauge: kpi.rev > 0 ? Math.round((kpi.hpp / kpi.rev) * 100) : null,
       gaugeColor: 'var(--warn)', badge: null,
     },
     {
       key: 'laba', label: 'Laba Bersih',
       value: fmt(kpi.laba), sub: `Net Margin ${(kpi.nm ?? 0).toFixed(1)}%`,
-      color: kpi.laba >= 0 ? 'var(--pos)' : 'var(--neg)',
+      accentColor: kpi.laba >= 0 ? 'var(--pos)' : 'var(--neg)',
       gauge: kpi.nm != null ? Math.min(Math.max(Math.round(kpi.nm), -100), 100) : null,
       gaugeColor: kpi.laba >= 0 ? 'var(--pos)' : 'var(--neg)',
       badge: kpi.nm != null ? { text: `NM ${kpi.nm.toFixed(1)}%`, type: kpi.nm >= 0 ? 'pos' : 'neg' } : null,
@@ -115,7 +115,7 @@ export default function Dashboard({ data, onReset }) {
     {
       key: 'gm', label: 'Gross Margin',
       value: `${(kpi.gm ?? 0).toFixed(1)}%`, sub: `Laba Kotor ${fmt(kpi.bruto)}`,
-      color: kpi.gm == null ? 'var(--t4)' : kpi.gm >= 30 ? 'var(--pos)' : kpi.gm >= 0 ? 'var(--warn)' : 'var(--neg)',
+      accentColor: kpi.gm == null ? 'var(--t4)' : kpi.gm >= 30 ? 'var(--pos)' : kpi.gm >= 0 ? 'var(--warn)' : 'var(--neg)',
       gauge: kpi.gm != null ? Math.min(Math.round(Math.abs(kpi.gm)), 100) : null,
       gaugeColor: kpi.gm == null ? 'var(--t4)' : kpi.gm >= 30 ? 'var(--pos)' : kpi.gm >= 0 ? 'var(--warn)' : 'var(--neg)',
       badge: kpi.gm != null
@@ -125,13 +125,13 @@ export default function Dashboard({ data, onReset }) {
     {
       key: 'aktiva', label: 'Total Aktiva',
       value: fmt(kpi.aset), sub: 'Saldo akhir periode',
-      color: 'var(--blue)', gauge: null, badge: null,
+      accentColor: 'var(--blue)', gauge: null, badge: null,
     },
     {
       key: 'budget', label: 'vs Budget',
       value: kpi.varPct != null ? `${kpi.varPct >= 0 ? '+' : ''}${kpi.varPct.toFixed(1)}%` : '—',
       sub: kpi.varPct != null ? (kpi.varPct >= 0 ? 'Di atas target' : 'Di bawah target') : 'Belum ada budget',
-      color: kpi.varPct == null ? 'var(--t4)' : kpi.varPct >= 0 ? 'var(--pos)' : 'var(--neg)',
+      accentColor: kpi.varPct == null ? 'var(--t4)' : kpi.varPct >= 0 ? 'var(--pos)' : 'var(--neg)',
       gauge: null,
       badge: kpi.varPct != null
         ? { text: kpi.varPct >= 0 ? '↑ Target' : '↓ Target', type: kpi.varPct >= 0 ? 'pos' : 'neg' }
@@ -181,7 +181,6 @@ export default function Dashboard({ data, onReset }) {
 
   return (
     <CoaContext.Provider value={{ openCoa: setCoaDrilldown, lrData: filteredLr }}>
-      {/* shared component styles (RatioPanel, Section, tables, dll) */}
       <style>{css}</style>
 
       <div className={styles.root}>
@@ -204,9 +203,7 @@ export default function Dashboard({ data, onReset }) {
           </div>
           <div className={styles.headerRight}>
             <PeriodPicker allMonths={allMonths} activeMonths={activeMonths} onChange={setActiveMonths}/>
-            <button className={styles.btnReset} onClick={onReset}>
-              ↑ Upload Ulang
-            </button>
+            <button className={styles.btnReset} onClick={onReset}>↑ Upload Ulang</button>
           </div>
         </header>
 
@@ -255,7 +252,7 @@ export default function Dashboard({ data, onReset }) {
                 key={i}
                 ref={el => kpiRefs.current[k.key] = el}
                 className={[styles.kpiCard, isOpen ? styles.kpiCardOpen : ''].join(' ')}
-                style={{ '--kc': k.color }}
+                style={{ '--kc': k.accentColor }}
                 onClick={e => {
                   e.stopPropagation()
                   setDrilldown(isOpen ? null : { key: k.key, el: kpiRefs.current[k.key] })
@@ -263,6 +260,7 @@ export default function Dashboard({ data, onReset }) {
               >
                 <div className={styles.kpiBar}/>
                 <div className={styles.kpiLabel}>{k.label}</div>
+                {/* nilai selalu putih — warna aksen hanya di bar & badge */}
                 <div
                   className={styles.kpiValue}
                   style={{ paddingRight: k.gauge != null ? '52px' : 0 }}

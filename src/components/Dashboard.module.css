@@ -172,8 +172,8 @@
 }
 
 .kpiCard:last-child { border-right: none; }
-.kpiCard:hover  { background: var(--surface3); }
-.kpiCardOpen    { background: var(--surface3); }
+.kpiCard:hover  { background: var(--surface3: #252a30); }
+.kpiCardOpen    { background: var(--surface3: #252a30); }
 .tabBtn:hover { color: var(--t1); }
 
 .kpiBar {

@@ -44,3 +44,8 @@ export const css = `
     --shadow-md: 0 4px 16px rgba(0,0,0,.6);
     --shadow-lg: 0 12px 40px rgba(0,0,0,.7);
   }
+
+body {
+    background: #07080a !important;
+    color: #f0f2f4 !important;
+  }

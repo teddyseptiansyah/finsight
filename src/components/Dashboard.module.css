@@ -271,3 +271,13 @@
   .kpiValue { font-size: 17px; }
   .kpiCard  { padding: 12px 10px 10px; }
 }
+
+.kpiStrip,
+.kpiCard {
+  background-color: #0d0f11 !important;
+}
+
+.kpiCard:hover,
+.kpiCardOpen {
+  background-color: #1e2d3d !important;
+}
